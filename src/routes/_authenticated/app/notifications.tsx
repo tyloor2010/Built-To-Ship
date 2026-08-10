@@ -6,8 +6,8 @@ import { useNotifications } from "@/lib/pc/data";
 export const Route = createFileRoute("/_authenticated/app/notifications")({ component: Notifications });
 
 function Notifications() {
-  const { workspace, userId } = useWorkspaceCtx();
-  const { data } = useNotifications(workspace.id, userId);
+  const { workspace } = useWorkspaceCtx();
+  const { data } = useNotifications(workspace.id);
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <h1 className="display text-4xl uppercase sm:text-5xl">Notifications</h1>
