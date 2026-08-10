@@ -1,24 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { LandingPage } from "@/components/marketing/LandingPage";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "Project Command — Run projects. Ship faster." },
+      {
+        name: "description",
+        content:
+          "Project Command is one bold workspace for projects, tasks, teams, timelines, files and an AI project assistant.",
+      },
+      { property: "og:title", content: "Project Command — Run projects. Ship faster." },
+      {
+        property: "og:description",
+        content: "One workspace for projects, tasks, teams, deadlines and AI insight.",
+      },
+    ],
+  }),
+  component: LandingPage,
 });
-
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
