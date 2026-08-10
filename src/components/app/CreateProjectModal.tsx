@@ -4,7 +4,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button, Card, Field, Input, Select, Textarea } from "@/components/pc/primitives";
 import { useWorkspaceCtx } from "@/components/app/workspace-context";
-import { PROJECT_STATUSES, PROJECT_TEMPLATES, labelize } from "@/lib/pc/data";
+import { PROJECT_STATUSES, PROJECT_TEMPLATES } from "@/lib/pc/data";
+import { labelize } from "@/components/pc/primitives";
 
 const COLORS = ["#1557FF", "#B8FF00", "#8B5CF6", "#FF7A29", "#EF4444", "#080B12"];
 
