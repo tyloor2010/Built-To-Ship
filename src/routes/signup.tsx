@@ -35,19 +35,27 @@ function SignupPage() {
       options: { emailRedirectTo: window.location.origin, data: { full_name: name } },
     });
     setLoading(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     if (data.session) {
       navigate({ to: "/onboarding", replace: true });
       return;
     }
     setSent(true);
+    return;
   }
 
   async function google() {
     const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-    if (result.error) return toast.error("Google sign-in failed. Try again.");
+    if (result.error) {
+      toast.error("Google sign-in failed. Try again.");
+      return;
+    }
     if (result.redirected) return;
     navigate({ to: "/onboarding", replace: true });
+    return;
   }
 
   if (sent) {
