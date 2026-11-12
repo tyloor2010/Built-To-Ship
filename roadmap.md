@@ -1,2 +1,8 @@
 - [x] Fix sizing on all devices
 - [x] Rename app to SYNEXIS
+- [ ] Calendar month/week, filters and task details
+- [ ] Files upload, download and restricted deletion
+- [ ] Reports, CSV and print
+- [ ] Searchable Help and contact
+- [ ] Workspace-only AI, saved conversations and streaming
+- [ ] Verify real flows and mobile layouts
