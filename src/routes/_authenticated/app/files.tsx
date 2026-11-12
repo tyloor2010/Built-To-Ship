@@ -1,6 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { PageHeader } from "@/components/pc/primitives";
-import { WorkspaceFiles } from "@/components/app/WorkspaceFiles";
-import { pageMeta } from "@/lib/pc/page-meta";
-export const Route = createFileRoute("/_authenticated/app/files")({ head: () => pageMeta("Files", "Manage attachments across your workspace projects."), component: Page });
-function Page() { return <div className="space-y-6"><PageHeader title="Files" description="Attachments across your workspace." /><WorkspaceFiles /></div>; }
+import { Card, EmptyState } from "@/components/pc/primitives";
+
+export const Route = createFileRoute("/_authenticated/app/files")({
+  component: Page,
+});
+
+function Page() {
+  return (
+    <div className="mx-auto max-w-7xl space-y-6">
+      <h1 className="display text-3xl uppercase sm:text-5xl">Files</h1>
+      <Card className="p-8">
+        <EmptyState emoji="📎" title="Files is warming up." sub="Upload attachments from a project to see them collected here." />
+      </Card>
+    </div>
+  );
+}

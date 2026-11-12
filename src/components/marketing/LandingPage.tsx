@@ -1,46 +1,86 @@
 import logo from "@/assets/synexis-logo.png";
 import { Link } from "@tanstack/react-router";
-import { BarChart3, CalendarDays, Check, FolderKanban, ListChecks, Search, Users } from "lucide-react";
-import { Button, Card } from "@/components/pc/primitives";
+import {
+  ArrowRight,
+  Bot,
+  CalendarDays,
+  Check,
+  FolderKanban,
+  LineChart,
+  ListChecks,
+  Users,
+} from "lucide-react";
+import { Badge, Button, Card, Sticker } from "@/components/pc/primitives";
 import { AppPreview } from "@/components/marketing/AppPreview";
 
 const FEATURES = [
-  { t: "Projects", d: "Group tasks, deadlines and people for each piece of work, with progress you can see at a glance.", icon: FolderKanban },
-  { t: "Task board", d: "Five clear stages from Backlog to Done. Drag a card, or use the keyboard, to move it.", icon: ListChecks },
-  { t: "Calendar", d: "Every task with a due date on one month view, so nothing slips past its day.", icon: CalendarDays },
-  { t: "Team", d: "See who is in the workspace and what each person is assigned.", icon: Users },
-  { t: "Analytics", d: "Tasks completed per week, by project and by person.", icon: BarChart3 },
-  { t: "Quick search", d: "Press Ctrl K to jump to any project, task, person or page.", icon: Search },
+  { n: "01", t: "PROJECTS", d: "Everything stays organized in one place.", icon: FolderKanban, tone: "bg-primary text-primary-foreground" },
+  { n: "02", t: "TASKS", d: "Know exactly what needs to happen next.", icon: ListChecks, tone: "bg-card" },
+  { n: "03", t: "TEAM", d: "See who's doing what and keep everyone aligned.", icon: Users, tone: "bg-lime text-lime-foreground" },
+  { n: "04", t: "TIMELINE", d: "Never lose track of important deadlines.", icon: CalendarDays, tone: "bg-card" },
+  { n: "05", t: "ANALYTICS", d: "Turn project activity into useful insights.", icon: LineChart, tone: "bg-grape text-grape-foreground" },
+  { n: "06", t: "AI COMMANDER", d: "Ask your workspace questions and get instant answers.", icon: Bot, tone: "bg-tangerine text-tangerine-foreground" },
 ];
 
 const STEPS = [
-  { n: "1", t: "Create a workspace", d: "Sign up and name your workspace. It takes about a minute." },
-  { n: "2", t: "Add projects and tasks", d: "Break the work into tasks, set due dates and assign owners." },
-  { n: "3", t: "Track progress", d: "Move tasks across the board and watch each project fill up." },
+  { n: "01", t: "CREATE", d: "Create your workspace and projects." },
+  { n: "02", t: "ORGANIZE", d: "Assign tasks, deadlines and responsibilities." },
+  { n: "03", t: "SHIP", d: "Track progress and get everything across the finish line." },
 ];
 
 const PLANS = [
-  { name: "Free", price: "$0", per: "no time limit", blurb: "For individuals and small projects.", features: ["1 workspace", "Up to 3 projects", "Unlimited tasks", "Basic analytics"], featured: false, available: true },
-  { name: "Pro", price: "$5", per: "per user / month", blurb: "For growing teams.", features: ["Unlimited projects", "Board and calendar views", "Files on projects", "Full analytics"], featured: true, available: false },
-  { name: "Team", price: "$15", per: "per user / month", blurb: "For larger organizations.", features: ["Roles and permissions", "Activity history", "Priority support", "Everything in Pro"], featured: false, available: false },
+  {
+    name: "FREE",
+    price: "$0",
+    per: "forever",
+    blurb: "For individuals and small projects.",
+    features: ["1 workspace", "Unlimited tasks", "3 projects", "Basic analytics"],
+    tone: "bg-card",
+    popular: false,
+  },
+  {
+    name: "PRO",
+    price: "$5",
+    per: "/ user / month",
+    blurb: "For growing teams.",
+    features: ["Unlimited projects", "Kanban + calendar", "AI Commander", "Files & comments"],
+    tone: "bg-primary text-primary-foreground",
+    popular: true,
+  },
+  {
+    name: "TEAM",
+    price: "$15",
+    per: "/ user / month",
+    blurb: "For serious organizations.",
+    features: ["Roles & permissions", "Advanced analytics", "Audit activity log", "Priority support"],
+    tone: "bg-card",
+    popular: false,
+  },
 ];
 
 function Nav() {
   return (
-    <header className="sticky top-0 z-40 border-b-3 border-foreground bg-background/95 backdrop-blur">
-      <div className="mx-auto grid max-w-[1200px] grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:px-6 lg:grid-cols-[minmax(0,1fr)_auto_auto] lg:gap-8">
+    <header className="sticky top-0 z-40 border-b-3 border-foreground bg-background/90 backdrop-blur">
+      <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:px-6 lg:grid-cols-[minmax(0,1fr)_auto_auto] lg:gap-6">
         <Link to="/" className="flex min-w-0 items-center gap-3">
-          <img src={logo} alt="" width={40} height={40} className="size-10 shrink-0 object-contain" />
-          <span className="display truncate text-sm">SYNEXIS</span>
+          <img src={logo} alt="SYNEXIS logo" width={44} height={44} className="size-11 shrink-0 object-contain" />
+          <span className="display truncate text-sm leading-[0.85]">
+            SYNEXIS
+          </span>
         </Link>
-        <nav aria-label="Main" className="hidden items-center gap-6 text-sm font-semibold lg:flex">
+        <nav className="hidden items-center gap-6 text-sm font-bold lg:flex">
           <a href="#features" className="hover:text-primary">Features</a>
           <a href="#how" className="hover:text-primary">How it works</a>
+          <a href="#solutions" className="hover:text-primary">Solutions</a>
           <a href="#pricing" className="hover:text-primary">Pricing</a>
         </nav>
         <div className="flex items-center gap-2 justify-self-end">
-          <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex"><Link to="/login">Sign in</Link></Button>
-          <Button asChild size="sm"><Link to="/signup">Start free</Link></Button>
+          <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+            <Link to="/login">Sign in</Link>
+          </Button>
+          <Button asChild size="sm">
+            <Link to="/signup">Start free →</Link>
+          </Button>
         </div>
       </div>
     </header>
@@ -49,129 +89,218 @@ function Nav() {
 
 export function LandingPage() {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-background">
+    <div className="min-h-screen bg-background">
       <Nav />
 
-      <main>
-        <section className="dotted-bg border-b-3 border-foreground">
-          <div className="mx-auto max-w-[1200px] px-4 pb-16 pt-14 sm:px-6 md:pt-20">
-            <div className="max-w-3xl">
-              <p className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">Project management for small teams</p>
-              <h1 className="display mt-4 text-[clamp(2.5rem,8vw,6rem)] uppercase">
-                Run projects.<br />Align teams.<br /><span className="text-primary">Ship faster.</span>
-              </h1>
-              <p className="mt-6 max-w-xl text-base text-muted-foreground sm:text-lg">
-                SYNEXIS keeps your projects, tasks and deadlines in one shared workspace, so everyone knows what is next and who owns it.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
-                <Button asChild size="lg"><Link to="/signup">Create a free workspace</Link></Button>
-                <Button asChild size="lg" variant="outline"><a href="#how">How it works</a></Button>
+      {/* HERO */}
+      <section className="dotted-bg relative overflow-hidden border-b-3 border-foreground">
+        <div className="mx-auto max-w-7xl px-4 pb-16 pt-14 sm:px-6 md:pt-20">
+          <div className="mx-auto max-w-4xl text-center">
+            <Sticker tone="lime" rotate={-4}>BUILT TO SHIP</Sticker>
+            <h1 className="display mt-6 text-[clamp(2.75rem,9vw,7rem)] uppercase">
+              Run projects.
+              <br />
+              Ship <span className="text-primary">faster.</span>
+            </h1>
+            <p className="mx-auto mt-6 max-w-2xl text-base font-semibold text-muted-foreground sm:text-lg">
+              One powerful workspace for projects, teams, tasks, deadlines and everything you need to turn
+              ideas into shipped work.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <Button asChild size="lg">
+                <Link to="/signup">Start free →</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <a href="#how">See how it works</a>
+              </Button>
+            </div>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+              {["No credit card", "Free workspace", "Built for modern teams"].map((t) => (
+                <Badge key={t} tone="paper" className="gap-1">
+                  <Check className="size-3" /> {t}
+                </Badge>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative mx-auto mt-14 max-w-6xl">
+            <div className="pointer-events-none absolute -left-6 top-10 hidden -rotate-12 lg:block">
+              <Sticker tone="blue" rotate={-14}>Real product</Sticker>
+            </div>
+            <div className="pointer-events-none absolute -right-4 -top-6 hidden lg:block">
+              <StarBurst />
+            </div>
+            <div className="pointer-events-none absolute -bottom-6 left-1/4 hidden rotate-6 lg:block">
+              <Sticker tone="orange" rotate={8}>Drag. Drop. Done.</Sticker>
+            </div>
+            <AppPreview />
+          </div>
+        </div>
+      </section>
+
+      {/* MARQUEE */}
+      <div className="overflow-hidden border-b-3 border-foreground bg-foreground py-3 text-background">
+        <div className="animate-marquee flex w-max gap-8 whitespace-nowrap">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <span key={i} className="flex gap-8 text-sm font-black uppercase tracking-[0.3em]">
+              {["Projects", "Tasks", "Kanban", "Timelines", "Files", "Analytics", "AI Commander", "Team workload"].map(
+                (w) => (
+                  <span key={w} className="flex items-center gap-8">
+                    {w} <span className="text-lime">✦</span>
+                  </span>
+                ),
+              )}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* FEATURES */}
+      <section id="features" className="border-b-3 border-foreground py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <Sticker tone="blue">FEATURES</Sticker>
+          <h2 className="display mt-5 max-w-4xl text-[clamp(2rem,6vw,4.5rem)] uppercase">
+            Everything your team needs to <span className="text-primary">ship.</span>
+          </h2>
+          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {FEATURES.map((f) => (
+              <Card key={f.n} hoverable className={`p-6 ${f.tone}`}>
+                <div className="flex items-start justify-between">
+                  <span className="display text-4xl opacity-80">{f.n}</span>
+                  <span className="grid size-12 place-items-center rounded-[14px] ink-2 bg-background text-foreground">
+                    <f.icon className="size-6" />
+                  </span>
+                </div>
+                <h3 className="display mt-6 text-3xl uppercase">{f.t}</h3>
+                <p className="mt-2 text-sm font-semibold opacity-80">{f.d}</p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section id="how" className="grid-bg border-b-3 border-foreground py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <Sticker tone="lime">HOW IT WORKS</Sticker>
+          <h2 className="display mt-5 text-[clamp(2rem,6vw,4.5rem)] uppercase">Three moves to shipped.</h2>
+          <div className="mt-12 grid gap-6 lg:grid-cols-3">
+            {STEPS.map((s, i) => (
+              <div key={s.n} className="relative">
+                <Card className="h-full bg-card p-8">
+                  <span className="display text-[5rem] leading-none text-primary">{s.n}</span>
+                  <h3 className="display mt-2 text-4xl uppercase">{s.t}</h3>
+                  <p className="mt-3 text-sm font-semibold text-muted-foreground">{s.d}</p>
+                </Card>
+                {i < STEPS.length - 1 && (
+                  <ArrowRight className="absolute -right-5 top-1/2 hidden size-8 -translate-y-1/2 lg:block" strokeWidth={3} />
+                )}
               </div>
-              <p className="mt-4 text-sm text-muted-foreground">Free plan, no card required.</p>
-            </div>
-            <div className="mt-14">
-              <AppPreview />
-            </div>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section id="features" className="scroll-mt-20 border-b-3 border-foreground py-20">
-          <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
-            <p className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">Features</p>
-            <h2 className="display mt-3 max-w-3xl text-[clamp(2rem,5vw,3.5rem)] uppercase">What your team gets</h2>
-            <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {FEATURES.map((f, i) => (
-                <Card key={f.t} className={`p-6 ${i === 0 ? "bg-primary text-primary-foreground lg:col-span-2" : ""}`}>
-                  <span className="grid size-11 place-items-center rounded-[12px] border-2 border-foreground bg-background text-foreground"><f.icon className="size-5" /></span>
-                  <h3 className="mt-5 text-xl font-bold" style={{ fontFamily: "var(--font-sans)", lineHeight: 1.2 }}>{f.t}</h3>
-                  <p className={`mt-2 max-w-md text-sm ${i === 0 ? "opacity-90" : "text-muted-foreground"}`}>{f.d}</p>
-                </Card>
-              ))}
-            </div>
+      {/* SOLUTIONS */}
+      <section id="solutions" className="border-b-3 border-foreground py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <Sticker tone="grape">SOLUTIONS</Sticker>
+          <h2 className="display mt-5 text-[clamp(2rem,6vw,4.5rem)] uppercase">Built for teams that ship.</h2>
+          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {[
+              ["Product teams", "Roadmaps, sprints and release plans in one command center.", "🛠️"],
+              ["Agencies", "Client projects, deadlines and deliverables without the chaos.", "🎯"],
+              ["Marketing", "Campaign launches with owners, assets and timelines.", "📣"],
+              ["Operations", "Recurring work, workload balance and reporting.", "⚙️"],
+            ].map(([t, d, e]) => (
+              <Card key={t} hoverable className="p-6">
+                <div className="grid size-14 place-items-center rounded-[16px] ink-2 bg-lime text-2xl shadow-hard-sm">
+                  {e}
+                </div>
+                <h3 className="display mt-5 text-2xl uppercase">{t}</h3>
+                <p className="mt-2 text-sm font-semibold text-muted-foreground">{d}</p>
+              </Card>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section id="how" className="grid-bg scroll-mt-20 border-b-3 border-foreground py-20">
-          <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
-            <p className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">How it works</p>
-            <h2 className="display mt-3 text-[clamp(2rem,5vw,3.5rem)] uppercase">Three steps to start</h2>
-            <ol className="mt-10 grid gap-5 lg:grid-cols-3">
-              {STEPS.map((s) => (
-                <li key={s.n}>
-                  <Card className="h-full p-6">
-                    <span className="grid size-11 place-items-center rounded-full border-2 border-foreground bg-lime font-black text-lime-foreground">{s.n}</span>
-                    <h3 className="mt-5 text-xl font-bold" style={{ fontFamily: "var(--font-sans)", lineHeight: 1.2 }}>{s.t}</h3>
-                    <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
-                  </Card>
-                </li>
-              ))}
-            </ol>
+      {/* PRICING */}
+      <section id="pricing" className="dotted-bg border-b-3 border-foreground py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <Sticker tone="lime">PRICING</Sticker>
+          <h2 className="display mt-5 text-[clamp(2rem,6vw,4.5rem)] uppercase">Simple, honest pricing.</h2>
+          <div className="mt-12 grid gap-6 lg:grid-cols-3">
+            {PLANS.map((p) => (
+              <Card key={p.name} className={`relative p-8 ${p.tone} ${p.popular ? "lg:-translate-y-3" : ""}`}>
+                {p.popular && (
+                  <span className="absolute -top-4 right-6">
+                    <Sticker tone="lime" rotate={6}>Most popular</Sticker>
+                  </span>
+                )}
+                <h3 className="display text-3xl uppercase">{p.name}</h3>
+                <p className="mt-1 text-sm font-semibold opacity-80">{p.blurb}</p>
+                <div className="mt-6 flex items-end gap-2">
+                  <span className="display text-6xl">{p.price}</span>
+                  <span className="pb-2 text-xs font-black uppercase tracking-widest opacity-70">{p.per}</span>
+                </div>
+                <ul className="mt-6 space-y-2">
+                  {p.features.map((f) => (
+                    <li key={f} className="flex items-center gap-2 text-sm font-bold">
+                      <Check className="size-4" strokeWidth={3} /> {f}
+                    </li>
+                  ))}
+                </ul>
+                <Button asChild variant={p.popular ? "lime" : "primary"} className="mt-8 w-full">
+                  <Link to="/signup">Start free →</Link>
+                </Button>
+              </Card>
+            ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section id="pricing" className="scroll-mt-20 border-b-3 border-foreground py-20">
-          <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
-            <p className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">Pricing</p>
-            <h2 className="display mt-3 text-[clamp(2rem,5vw,3.5rem)] uppercase">Simple pricing</h2>
-            <p className="mt-3 max-w-xl text-sm text-muted-foreground">Start on Free today. Pro and Team are not on sale yet; you will be able to upgrade from inside the app when they launch.</p>
-            <div className="mt-10 grid gap-5 lg:grid-cols-3">
-              {PLANS.map((p) => (
-                <Card key={p.name} className={`flex flex-col p-7 ${p.featured ? "bg-primary text-primary-foreground" : ""}`}>
-                  <div className="flex items-center justify-between gap-2">
-                    <h3 className="text-xl font-bold" style={{ fontFamily: "var(--font-sans)" }}>{p.name}</h3>
-                    {!p.available && <span className="rounded-full border-2 border-current px-2.5 py-0.5 text-xs font-bold">Coming soon</span>}
-                  </div>
-                  <p className={`mt-1 text-sm ${p.featured ? "opacity-90" : "text-muted-foreground"}`}>{p.blurb}</p>
-                  <div className="mt-6 flex items-end gap-2">
-                    <span className="display text-5xl">{p.price}</span>
-                    <span className={`pb-1.5 text-sm ${p.featured ? "opacity-90" : "text-muted-foreground"}`}>{p.per}</span>
-                  </div>
-                  <ul className="mt-6 flex-1 space-y-2">
-                    {p.features.map((f) => (
-                      <li key={f} className="flex items-center gap-2 text-sm font-semibold"><Check className="size-4 shrink-0" strokeWidth={3} /> {f}</li>
-                    ))}
-                  </ul>
-                  {p.available ? (
-                    <Button asChild className="mt-8 w-full"><Link to="/signup">Start free</Link></Button>
-                  ) : (
-                    <Button asChild variant={p.featured ? "lime" : "outline"} className="mt-8 w-full"><Link to="/signup">Start on Free for now</Link></Button>
-                  )}
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="py-20">
-          <div className="mx-auto max-w-[1200px] px-4 sm:px-6">
-            <Card className="bg-foreground p-8 text-background sm:p-12">
-              <h2 className="display text-[clamp(2rem,5vw,3.5rem)] uppercase">Get your team on <span className="text-lime">one page</span></h2>
-              <p className="mt-3 max-w-xl text-sm opacity-85">Create a workspace, add your first project and let the board keep everyone in step.</p>
-              <Button asChild variant="lime" size="lg" className="mt-8"><Link to="/signup">Create a free workspace</Link></Button>
-            </Card>
-          </div>
-        </section>
-      </main>
+      {/* CTA */}
+      <section className="py-20">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6">
+          <Card className="relative overflow-hidden bg-foreground p-10 text-background sm:p-16">
+            <h2 className="display text-[clamp(2rem,7vw,5rem)] uppercase">
+              Stop managing. <span className="text-lime">Start shipping.</span>
+            </h2>
+            <p className="mt-4 max-w-xl text-sm font-semibold opacity-80">
+              Create your free workspace in under a minute. No credit card, no setup call, no nonsense.
+            </p>
+            <Button asChild variant="lime" size="lg" className="mt-8">
+              <Link to="/signup">Create your workspace →</Link>
+            </Button>
+          </Card>
+        </div>
+      </section>
 
       <footer className="border-t-3 border-foreground py-10">
-        <div className="mx-auto grid max-w-[1200px] gap-6 px-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-6">
-          <div className="flex items-center gap-3">
-            <img src={logo} alt="" width={32} height={32} className="size-8" />
-            <div>
-              <div className="display text-sm">SYNEXIS</div>
-              <div className="text-xs text-muted-foreground">Run projects. Align teams. Ship faster.</div>
-            </div>
-          </div>
-          <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold">
-            <a href="#features" className="hover:text-primary">Features</a>
-            <a href="#pricing" className="hover:text-primary">Pricing</a>
-            <Link to="/terms" className="hover:text-primary">Terms</Link>
-            <Link to="/privacy" className="hover:text-primary">Privacy</Link>
-            <Link to="/login" className="hover:text-primary">Sign in</Link>
-          </nav>
-          <p className="text-xs text-muted-foreground sm:col-span-2">© 2026 SYNEXIS</p>
+        <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+          <span className="display text-sm leading-[0.9]">
+            SYNEXIS
+          </span>
+          <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+            Run projects. Align teams. Ship faster.
+          </p>
         </div>
       </footer>
     </div>
+  );
+}
+
+function StarBurst() {
+  return (
+    <svg width="110" height="110" viewBox="0 0 100 100" aria-hidden="true">
+      <path
+        d="M50 2 58 32 88 22 68 48 96 62 64 66 72 96 50 74 28 96 36 66 4 62 32 48 12 22 42 32Z"
+        fill="var(--lime)"
+        stroke="var(--foreground)"
+        strokeWidth="3"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }

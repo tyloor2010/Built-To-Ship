@@ -4,14 +4,20 @@ import { LandingPage } from "@/components/marketing/LandingPage";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "SYNEXIS | Project management for small teams" },
-      { name: "description", content: "SYNEXIS keeps projects, tasks and deadlines in one shared workspace, with a task board, calendar and analytics. Free plan, no card required." },
-      { property: "og:title", content: "SYNEXIS | Project management for small teams" },
-      { property: "og:description", content: "Projects, tasks and deadlines in one shared workspace. Free plan, no card required." },
+      { title: "SYNEXIS — Project Management Platform for Modern Teams" },
+      {
+        name: "description",
+        content:
+          "SYNEXIS helps teams plan projects, manage tasks, hit deadlines and collaborate in one powerful workspace — with Kanban boards, timelines, analytics and an AI project assistant.",
+      },
+      { property: "og:title", content: "SYNEXIS — Project Management Platform for Modern Teams" },
+      {
+        property: "og:description",
+        content:
+          "Plan, track and deliver every project with your team in one workspace — Kanban, timelines, analytics and AI insights.",
+      },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "https://synexis.lovable.app/og-image.jpg" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://synexis.lovable.app/og-image.jpg" },
     ],
   }),
   component: LandingPage,

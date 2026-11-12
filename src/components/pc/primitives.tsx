@@ -6,24 +6,24 @@ import { cn } from "@/lib/utils";
 /* ---------------- Button ---------------- */
 
 export const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[14px] font-bold tracking-tight transition-[transform,box-shadow,background-color] duration-150 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-hard-none disabled:translate-x-0 disabled:translate-y-0 active:translate-x-[2px] active:translate-y-[2px] active:shadow-hard-none [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[14px] font-bold tracking-tight transition-all duration-100 disabled:pointer-events-none disabled:opacity-50 active:translate-x-[3px] active:translate-y-[3px] active:shadow-hard-none [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        primary: "ink-2 bg-primary text-primary-foreground shadow-hard-sm hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-hard",
-        lime: "ink-2 bg-lime text-lime-foreground shadow-hard-sm hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-hard",
-        ink: "ink-2 bg-foreground text-background shadow-hard-sm hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-hard",
-        outline: "ink-2 bg-card text-foreground shadow-hard-sm hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-hard",
-        danger: "ink-2 bg-destructive text-destructive-foreground shadow-hard-sm hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-hard",
-        ghost: "border-2 border-transparent hover:bg-muted",
+        primary: "ink bg-primary text-primary-foreground shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-hard-sm",
+        lime: "ink bg-lime text-lime-foreground shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-hard-sm",
+        ink: "ink bg-foreground text-background shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-hard-sm",
+        outline: "ink bg-card text-foreground shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-hard-sm",
+        danger: "ink bg-destructive text-destructive-foreground shadow-hard hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-hard-sm",
+        ghost: "border-3 border-transparent hover:bg-muted",
         link: "underline decoration-2 underline-offset-4 hover:text-primary",
       },
       size: {
-        sm: "h-10 px-3.5 text-[13px] [&_svg]:size-4",
+        sm: "h-9 px-3 text-[13px] [&_svg]:size-4",
         md: "h-11 px-5 text-sm [&_svg]:size-4",
         lg: "h-14 px-7 text-base [&_svg]:size-5",
         icon: "size-11 [&_svg]:size-5",
-        iconSm: "size-10 [&_svg]:size-4",
+        iconSm: "size-9 [&_svg]:size-4",
       },
     },
     defaultVariants: { variant: "primary", size: "md" },
@@ -34,26 +34,12 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
-  loading?: boolean | undefined;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild, loading, disabled, children, ...props }, ref) => {
-    if (asChild) {
-      return <Slot ref={ref} className={cn(buttonVariants({ variant, size }), className)} {...props}>{children}</Slot>;
-    }
-    return (
-      <button
-        ref={ref}
-        aria-busy={loading || undefined}
-        disabled={disabled || loading}
-        className={cn(buttonVariants({ variant, size }), className)}
-        {...props}
-      >
-        {loading && <span aria-hidden className="size-4 animate-spin rounded-full border-2 border-current border-r-transparent" />}
-        {children}
-      </button>
-    );
+  ({ className, variant, size, asChild, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+    return <Comp ref={ref} className={cn(buttonVariants({ variant, size }), className)} {...props} />;
   },
 );
 Button.displayName = "Button";
@@ -80,7 +66,7 @@ export function Card({
 /* ---------------- Badge / Sticker ---------------- */
 
 const badgeVariants = cva(
-  "inline-flex items-center gap-1.5 rounded-full ink-2 px-2.5 py-0.5 text-xs font-bold",
+  "inline-flex items-center gap-1.5 rounded-full ink-2 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider",
   {
     variants: {
       tone: {
@@ -264,26 +250,8 @@ export const STATUS_TONES: Record<string, "lime" | "blue" | "orange" | "red" | "
   urgent: "red",
 };
 
-const LABELS: Record<string, string> = { todo: "To do", in_progress: "In progress", at_risk: "At risk", on_track: "On track", off_track: "Off track" };
-
 export function labelize(value: string) {
-  if (LABELS[value]) return LABELS[value]!;
-  const t = value.replace(/_/g, " ");
-  return t.charAt(0).toUpperCase() + t.slice(1);
-}
-
-export function relativeTime(iso: string) {
-  const diff = (Date.now() - new Date(iso).getTime()) / 1000;
-  if (diff < 60) return "Just now";
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-  if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`;
-  return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" });
-}
-
-export function formatDate(d: string | null | undefined) {
-  if (!d) return "";
-  return new Date(d.length === 10 ? d + "T00:00:00" : d).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  return value.replace(/_/g, " ").toUpperCase();
 }
 
 export function StatusPill({ value, className }: { value: string; className?: string }) {
@@ -302,7 +270,7 @@ export const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttribute
     <input
       ref={ref}
       className={cn(
-        "h-12 w-full rounded-[14px] ink-2 bg-card px-4 text-sm font-semibold placeholder:font-medium placeholder:text-muted-foreground transition-shadow duration-150 focus:outline-none focus-visible:shadow-hard-sm aria-[invalid=true]:border-destructive",
+        "h-12 w-full rounded-[14px] ink-2 bg-card px-4 text-sm font-semibold placeholder:font-medium placeholder:text-muted-foreground focus:outline-none focus-visible:shadow-hard-sm",
         className,
       )}
       {...props}
@@ -316,7 +284,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, React.TextareaHTML
     <textarea
       ref={ref}
       className={cn(
-        "w-full rounded-[14px] ink-2 bg-card px-4 py-3 text-sm font-semibold placeholder:font-medium placeholder:text-muted-foreground transition-shadow duration-150 focus:outline-none focus-visible:shadow-hard-sm aria-[invalid=true]:border-destructive",
+        "w-full rounded-[14px] ink-2 bg-card px-4 py-3 text-sm font-semibold placeholder:font-medium placeholder:text-muted-foreground focus:outline-none focus-visible:shadow-hard-sm",
         className,
       )}
       {...props}
@@ -330,7 +298,7 @@ export const Select = React.forwardRef<HTMLSelectElement, React.SelectHTMLAttrib
     <select
       ref={ref}
       className={cn(
-        "h-12 w-full rounded-[14px] ink-2 bg-card px-4 text-sm font-semibold focus:outline-none focus-visible:shadow-hard-sm",
+        "h-12 w-full appearance-none rounded-[14px] ink-2 bg-card px-4 text-sm font-bold focus:outline-none",
         className,
       )}
       {...props}
@@ -346,13 +314,13 @@ export function Field({
   className,
 }: {
   label: string;
-  hint?: string | undefined;
+  hint?: string;
   children: React.ReactNode;
   className?: string;
 }) {
   return (
     <label className={cn("block space-y-1.5", className)}>
-      <span className="text-sm font-bold">{label}</span>
+      <span className="text-[11px] font-black uppercase tracking-widest">{label}</span>
       {children}
       {hint && <span className="block text-xs font-medium text-muted-foreground">{hint}</span>}
     </label>
@@ -385,52 +353,27 @@ export function EmptyState({
   title,
   sub,
   action,
-  icon: Icon,
-  bare,
+  emoji = "📦",
 }: {
   title: string;
   sub?: string;
   action?: React.ReactNode;
-  icon?: React.ComponentType<{ className?: string }>;
-  bare?: boolean;
-}) {
-  const body = (
-    <div className="flex flex-col items-center justify-center gap-3 px-6 py-12 text-center">
-      {Icon && (
-        <div className="grid size-12 place-items-center rounded-[14px] ink-2 bg-muted">
-          <Icon className="size-5" />
-        </div>
-      )}
-      <h3 className="text-lg font-bold tracking-tight" style={{ fontFamily: "var(--font-sans)", lineHeight: 1.2 }}>{title}</h3>
-      {sub && <p className="max-w-sm text-sm text-muted-foreground">{sub}</p>}
-      {action && <div className="mt-1">{action}</div>}
-    </div>
-  );
-  return bare ? body : <Card>{body}</Card>;
-}
-
-export function PageHeader({
-  title,
-  description,
-  actions,
-}: {
-  title: React.ReactNode;
-  description?: React.ReactNode;
-  actions?: React.ReactNode;
+  emoji?: string;
 }) {
   return (
-    <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-      <div className="min-w-0">
-        <h1 className="display text-3xl uppercase sm:text-5xl">{title}</h1>
-        {description && <p className="mt-2 text-sm text-muted-foreground">{description}</p>}
+    <Card className="dotted-bg flex flex-col items-center justify-center gap-3 px-6 py-14 text-center">
+      <div className="grid size-16 place-items-center rounded-[18px] ink-2 bg-lime text-3xl shadow-hard-sm">
+        {emoji}
       </div>
-      {actions && <div className="flex shrink-0 flex-wrap gap-2">{actions}</div>}
-    </header>
+      <h3 className="display text-2xl uppercase">{title}</h3>
+      {sub && <p className="max-w-sm text-sm font-medium text-muted-foreground">{sub}</p>}
+      {action}
+    </Card>
   );
 }
 
 export function Skeleton({ className }: { className?: string }) {
-  return <div className={cn("animate-pulse rounded-[14px] bg-muted", className)} />;
+  return <div className={cn("animate-pulse rounded-[14px] ink-2 bg-muted", className)} />;
 }
 
 export function StatCard({
@@ -456,11 +399,11 @@ export function StatCard({
   return (
     <Card hoverable className={cn("p-4 sm:p-5", tones[tone])}>
       <div className="flex items-start justify-between gap-3">
-        <span className="text-[11px] font-black uppercase tracking-widest opacity-90">{label}</span>
+        <span className="text-[10px] font-black uppercase tracking-widest opacity-80 sm:text-[11px]">{label}</span>
         {icon}
       </div>
       <div className="display mt-3 text-3xl sm:text-5xl">{value}</div>
-      {hint && <div className="mt-1 text-xs font-semibold opacity-80">{hint}</div>}
+      {hint && <div className="mt-1 text-xs font-bold uppercase tracking-wider opacity-70">{hint}</div>}
     </Card>
   );
 }
