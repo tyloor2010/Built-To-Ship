@@ -42,9 +42,9 @@ function Overview() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-6">
-      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 sm:flex sm:flex-wrap sm:justify-between">
+      <header className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
         <div className="min-w-0">
-          <h1 className="display text-4xl uppercase sm:text-5xl">
+          <h1 className="display text-3xl uppercase sm:text-5xl">
             {greeting()}, {firstName}.
           </h1>
           <p className="mt-2 text-sm font-semibold text-muted-foreground">
@@ -61,7 +61,7 @@ function Overview() {
         </div>
       </header>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
         <StatCard label="Active projects" value={active.length} tone="paper" icon={<TrendingUp className="size-5" />} />
         <StatCard label="Tasks due" value={due} tone="blue" icon={<CalendarDays className="size-5" />} />
         <StatCard label="Team members" value={(members ?? []).length} tone="lime" icon={<Users className="size-5" />} />

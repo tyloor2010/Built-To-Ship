@@ -9,9 +9,9 @@ import { Button, Field, Input } from "@/components/pc/primitives";
 export const Route = createFileRoute("/signup")({
   head: () => ({
     meta: [
-      { title: "Create your workspace — Project Command" },
-      { name: "description", content: "Create a free Project Command workspace and start shipping." },
-      { property: "og:title", content: "Create your workspace — Project Command" },
+      { title: "Create your workspace — SYNEXIS" },
+      { name: "description", content: "Create a free SYNEXIS workspace and start shipping." },
+      { property: "og:title", content: "Create your workspace — SYNEXIS" },
       { property: "og:description", content: "Create a free workspace and start shipping." },
     ],
   }),

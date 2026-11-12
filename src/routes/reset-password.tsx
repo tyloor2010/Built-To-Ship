@@ -8,9 +8,9 @@ import { Button, Field, Input } from "@/components/pc/primitives";
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
     meta: [
-      { title: "Set a new password — Project Command" },
-      { name: "description", content: "Choose a new password for your Project Command account." },
-      { property: "og:title", content: "Set a new password — Project Command" },
+      { title: "Set a new password — SYNEXIS" },
+      { name: "description", content: "Choose a new password for your SYNEXIS account." },
+      { property: "og:title", content: "Set a new password — SYNEXIS" },
       { property: "og:description", content: "Choose a new password for your account." },
     ],
   }),

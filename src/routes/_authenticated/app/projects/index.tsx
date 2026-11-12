@@ -31,9 +31,9 @@ function ProjectsPage() {
   return (
     <div className="mx-auto max-w-7xl space-y-6">
       <CreateProjectModal open={open} onClose={() => setOpen(false)} />
-      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <h1 className="display text-4xl uppercase sm:text-5xl">Projects</h1>
+          <h1 className="display text-3xl uppercase sm:text-5xl">Projects</h1>
           <p className="mt-1 text-sm font-semibold text-muted-foreground">Everything your team is building.</p>
         </div>
         {canWrite && <Button onClick={() => setOpen(true)}>+ New Project</Button>}

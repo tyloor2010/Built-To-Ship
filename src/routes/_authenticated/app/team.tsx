@@ -10,7 +10,7 @@ function Team() {
   const { data: members } = useMembers(workspace.id);
   return (
     <div className="mx-auto max-w-7xl space-y-6">
-      <h1 className="display text-4xl uppercase sm:text-5xl">Team</h1>
+      <h1 className="display text-3xl uppercase sm:text-5xl">Team</h1>
       {!members?.length && <EmptyState emoji="👥" title="Just you for now." sub="Invite teammates to collaborate." />}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {(members ?? []).map((m) => (

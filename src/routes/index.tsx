@@ -4,13 +4,13 @@ import { LandingPage } from "@/components/marketing/LandingPage";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Project Command — Run projects. Ship faster." },
+      { title: "SYNEXIS — Run projects. Ship faster." },
       {
         name: "description",
         content:
-          "Project Command is one bold workspace for projects, tasks, teams, timelines, files and an AI project assistant.",
+          "SYNEXIS is one bold workspace for projects, tasks, teams, timelines, files and an AI project assistant.",
       },
-      { property: "og:title", content: "Project Command — Run projects. Ship faster." },
+      { property: "og:title", content: "SYNEXIS — Run projects. Ship faster." },
       {
         property: "og:description",
         content: "One workspace for projects, tasks, teams, deadlines and AI insight.",

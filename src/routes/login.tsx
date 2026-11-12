@@ -9,10 +9,10 @@ import { Button, Field, Input } from "@/components/pc/primitives";
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "Sign in — Project Command" },
-      { name: "description", content: "Sign in to your Project Command workspace." },
-      { property: "og:title", content: "Sign in — Project Command" },
-      { property: "og:description", content: "Sign in to your Project Command workspace." },
+      { title: "Sign in — SYNEXIS" },
+      { name: "description", content: "Sign in to your SYNEXIS workspace." },
+      { property: "og:title", content: "Sign in — SYNEXIS" },
+      { property: "og:description", content: "Sign in to your SYNEXIS workspace." },
     ],
   }),
   component: LoginPage,

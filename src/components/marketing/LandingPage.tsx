@@ -63,12 +63,10 @@ function Nav() {
       <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:px-6">
         <Link to="/" className="flex min-w-0 items-center gap-3">
           <span className="grid size-11 shrink-0 place-items-center rounded-[14px] ink bg-foreground text-background shadow-hard-sm">
-            <span className="display text-lg">PC</span>
+            <span className="display text-lg">SX</span>
           </span>
           <span className="display truncate text-sm leading-[0.85]">
-            PROJECT
-            <br />
-            COMMAND
+            SYNEXIS
           </span>
         </Link>
         <nav className="hidden items-center gap-6 text-sm font-bold lg:flex">
@@ -283,9 +281,7 @@ export function LandingPage() {
       <footer className="border-t-3 border-foreground py-10">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <span className="display text-sm leading-[0.9]">
-            PROJECT
-            <br />
-            COMMAND
+            SYNEXIS
           </span>
           <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
             Run projects. Align teams. Ship faster.

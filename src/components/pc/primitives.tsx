@@ -181,6 +181,7 @@ export function Avatar({
   title?: string | undefined;
 }) {
   const idx = (name ?? "?").charCodeAt(0) % AVATAR_TONES.length;
+  const [broken, setBroken] = React.useState(false);
   return (
     <span
       title={title ?? name ?? undefined}
@@ -191,8 +192,8 @@ export function Avatar({
         className,
       )}
     >
-      {src ? (
-        <img src={src} alt={name ?? "Member avatar"} className="h-full w-full object-cover" />
+      {src && !broken ? (
+        <img src={src} alt="" onError={() => setBroken(true)} className="h-full w-full object-cover" />
       ) : (
         initialsOf(name)
       )}
@@ -396,12 +397,12 @@ export function StatCard({
     orange: "bg-tangerine text-tangerine-foreground",
   };
   return (
-    <Card hoverable className={cn("p-5", tones[tone])}>
+    <Card hoverable className={cn("p-4 sm:p-5", tones[tone])}>
       <div className="flex items-start justify-between gap-3">
-        <span className="text-[11px] font-black uppercase tracking-widest opacity-80">{label}</span>
+        <span className="text-[10px] font-black uppercase tracking-widest opacity-80 sm:text-[11px]">{label}</span>
         {icon}
       </div>
-      <div className="display mt-3 text-5xl">{value}</div>
+      <div className="display mt-3 text-3xl sm:text-5xl">{value}</div>
       {hint && <div className="mt-1 text-xs font-bold uppercase tracking-wider opacity-70">{hint}</div>}
     </Card>
   );

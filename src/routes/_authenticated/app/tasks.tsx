@@ -100,9 +100,9 @@ function TasksPage() {
         </form>
       </Modal>
 
-      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
-          <h1 className="display text-4xl uppercase sm:text-5xl">My Tasks</h1>
+          <h1 className="display text-3xl uppercase sm:text-5xl">My Tasks</h1>
           <p className="mt-1 text-sm font-semibold text-muted-foreground">Drag cards between columns to update status.</p>
         </div>
         <div className="flex gap-2">

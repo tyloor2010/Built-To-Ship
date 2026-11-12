@@ -26,7 +26,7 @@ function ProfileSettings() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <h1 className="display text-4xl uppercase sm:text-5xl">Profile</h1>
+      <h1 className="display text-3xl uppercase sm:text-5xl">Profile</h1>
       <Card className="p-6">
         <div className="flex items-center gap-4">
           <Avatar name={name || profile?.email} src={profile?.avatar_url} size={64} />

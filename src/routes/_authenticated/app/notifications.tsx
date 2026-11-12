@@ -10,7 +10,7 @@ function Notifications() {
   const { data } = useNotifications(workspace.id);
   return (
     <div className="mx-auto max-w-3xl space-y-6">
-      <h1 className="display text-4xl uppercase sm:text-5xl">Notifications</h1>
+      <h1 className="display text-3xl uppercase sm:text-5xl">Notifications</h1>
       {!data?.length && <EmptyState emoji="🔔" title="All clear." sub="You're caught up." />}
       <Card className="divide-y-2 divide-foreground/10 p-2">
         {(data ?? []).map((n) => (

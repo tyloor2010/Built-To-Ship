@@ -33,7 +33,7 @@ export function AppPreview() {
         <span className="size-3 rounded-full ink-2 bg-tangerine" />
         <span className="size-3 rounded-full ink-2 bg-lime" />
         <span className="ml-3 truncate text-[11px] font-black uppercase tracking-widest text-muted-foreground">
-          projectcommand.app / workspace / website redesign
+          synexis.app / workspace / website redesign
         </span>
       </div>
 
@@ -41,9 +41,7 @@ export function AppPreview() {
         {/* sidebar */}
         <aside className="hidden border-r-3 border-foreground bg-sidebar p-3 md:block">
           <div className="display text-[11px] leading-[0.9]">
-            PROJECT
-            <br />
-            COMMAND
+            SYNEXIS
           </div>
           <div className="mt-4 space-y-1.5">
             {["Overview", "Projects", "My Tasks", "Calendar", "Team"].map((i, idx) => (

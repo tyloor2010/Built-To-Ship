@@ -15,7 +15,7 @@ function Analytics() {
   const rate = list.length ? Math.round((done / list.length) * 100) : 0;
   return (
     <div className="mx-auto max-w-7xl space-y-6">
-      <h1 className="display text-4xl uppercase sm:text-5xl">Analytics</h1>
+      <h1 className="display text-3xl uppercase sm:text-5xl">Analytics</h1>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Total tasks" value={list.length} tone="paper" />
         <StatCard label="Completed" value={done} tone="lime" />

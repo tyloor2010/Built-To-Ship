@@ -1,0 +1,2 @@
+- [x] Fix sizing on all devices
+- [x] Rename app to SYNEXIS

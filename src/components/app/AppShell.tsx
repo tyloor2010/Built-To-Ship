@@ -121,12 +121,10 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="flex h-full flex-col gap-5 overflow-y-auto p-4">
       <Link to="/app" className="flex items-center gap-3" onClick={() => setMobileOpen(false)}>
         <span className="grid size-10 shrink-0 place-items-center rounded-[12px] ink-2 bg-foreground text-background">
-          <span className="display text-base">PC</span>
+          <span className="display text-base">SX</span>
         </span>
         <span className="display text-xs leading-[0.85]">
-          PROJECT
-          <br />
-          COMMAND
+          SYNEXIS
         </span>
       </Link>
 
