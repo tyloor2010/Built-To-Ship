@@ -6,3 +6,4 @@
 - [ ] Searchable Help and contact
 - [ ] Workspace-only AI, saved conversations and streaming
 - [ ] Verify real flows and mobile layouts
+- [ ] Match homepage to uploaded reference
