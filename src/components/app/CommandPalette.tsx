@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { Bot, FolderKanban, ListChecks, PieChart, Plus, Settings, UserPlus, Users } from "lucide-react";
+import { Bell, CalendarDays, FileText, FolderKanban, HelpCircle, LayoutDashboard, ListChecks, PieChart, Plus, Settings, Users } from "lucide-react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -11,6 +11,19 @@ import {
 } from "@/components/ui/command";
 import { useWorkspaceCtx } from "@/components/app/workspace-context";
 import { useProjects, useTasks, useMembers } from "@/lib/pc/data";
+
+const PAGES = [
+  { to: "/app", label: "Overview", icon: LayoutDashboard },
+  { to: "/app/projects", label: "Projects", icon: FolderKanban },
+  { to: "/app/tasks", label: "My Tasks", icon: ListChecks },
+  { to: "/app/calendar", label: "Calendar", icon: CalendarDays },
+  { to: "/app/team", label: "Team", icon: Users },
+  { to: "/app/files", label: "Files", icon: FileText },
+  { to: "/app/analytics", label: "Analytics", icon: PieChart },
+  { to: "/app/notifications", label: "Notifications", icon: Bell },
+  { to: "/app/settings/profile", label: "Settings", icon: Settings },
+  { to: "/app/help", label: "Help", icon: HelpCircle },
+];
 
 export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   const navigate = useNavigate();
@@ -26,9 +39,9 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
 
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
-      <CommandInput placeholder="Type a command or search…" />
+      <CommandInput placeholder="Search projects, tasks, people and pages" />
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandEmpty>No matches. Try a different word.</CommandEmpty>
         <CommandGroup heading="Actions">
           <CommandItem onSelect={() => go("/app/projects", { new: "1" })}>
             <Plus className="mr-2 size-4" /> Create project
@@ -36,32 +49,19 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
           <CommandItem onSelect={() => go("/app/tasks", { new: "1" })}>
             <ListChecks className="mr-2 size-4" /> Create task
           </CommandItem>
-          <CommandItem onSelect={() => go("/app/team", { invite: "1" })}>
-            <UserPlus className="mr-2 size-4" /> Invite member
-          </CommandItem>
         </CommandGroup>
         <CommandSeparator />
-        <CommandGroup heading="Navigate">
-          <CommandItem onSelect={() => go("/app/projects")}>
-            <FolderKanban className="mr-2 size-4" /> Projects
-          </CommandItem>
-          <CommandItem onSelect={() => go("/app/analytics")}>
-            <PieChart className="mr-2 size-4" /> Analytics
-          </CommandItem>
-          <CommandItem onSelect={() => go("/app/ai")}>
-            <Bot className="mr-2 size-4" /> AI Commander
-          </CommandItem>
-          <CommandItem onSelect={() => go("/app/team")}>
-            <Users className="mr-2 size-4" /> Team
-          </CommandItem>
-          <CommandItem onSelect={() => go("/app/settings/profile")}>
-            <Settings className="mr-2 size-4" /> Settings
-          </CommandItem>
+        <CommandGroup heading="Pages">
+          {PAGES.map((pg) => (
+            <CommandItem key={pg.to} value={`page ${pg.label}`} onSelect={() => go(pg.to)}>
+              <pg.icon className="mr-2 size-4" /> {pg.label}
+            </CommandItem>
+          ))}
         </CommandGroup>
 
         {!!projects?.length && (
           <CommandGroup heading="Projects">
-            {projects.slice(0, 6).map((p) => (
+            {projects.slice(0, 20).map((p) => (
               <CommandItem key={p.id} value={`project ${p.name}`} onSelect={() => go(`/app/projects/${p.id}`)}>
                 <FolderKanban className="mr-2 size-4" /> {p.name}
               </CommandItem>
@@ -71,7 +71,7 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
 
         {!!tasks?.length && (
           <CommandGroup heading="Tasks">
-            {tasks.slice(0, 6).map((t) => (
+            {tasks.slice(0, 30).map((t) => (
               <CommandItem key={t.id} value={`task ${t.title}`} onSelect={() => go("/app/tasks")}>
                 <ListChecks className="mr-2 size-4" /> {t.title}
               </CommandItem>
@@ -81,7 +81,7 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
 
         {!!members?.length && (
           <CommandGroup heading="People">
-            {members.slice(0, 6).map((m) => (
+            {members.slice(0, 20).map((m) => (
               <CommandItem
                 key={m.id}
                 value={`person ${m.profile?.full_name ?? m.invited_email ?? ""}`}

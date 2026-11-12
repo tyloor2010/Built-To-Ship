@@ -8,9 +8,9 @@ import { Button, Field, Input } from "@/components/pc/primitives";
 export const Route = createFileRoute("/forgot-password")({
   head: () => ({
     meta: [
-      { title: "Reset your password — SYNEXIS" },
+      { title: "Reset your password | SYNEXIS" },
       { name: "description", content: "Request a password reset link for your SYNEXIS account." },
-      { property: "og:title", content: "Reset your password — SYNEXIS" },
+      { property: "og:title", content: "Reset your password | SYNEXIS" },
       { property: "og:description", content: "Request a password reset link." },
     ],
   }),
@@ -30,7 +30,7 @@ function ForgotPasswordPage() {
     });
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      toast.error(`Could not send the link. ${error.message}`);
       return;
     }
     setSent(true);
@@ -39,9 +39,8 @@ function ForgotPasswordPage() {
 
   return (
     <AuthShell
-      eyebrow="Password help"
-      title={sent ? "Link sent." : "Forgot it?"}
-      sub={sent ? `If an account exists for ${email}, a reset link is on its way.` : "We'll email you a reset link."}
+            title={sent ? "Check your email" : "Reset your password"}
+      sub={sent ? `If an account exists for ${email}, a reset link is on its way.` : "Enter your account email and we will send you a reset link."}
       footer={
         <Link to="/login" className="text-primary underline decoration-2 underline-offset-4">
           Back to sign in
@@ -51,10 +50,10 @@ function ForgotPasswordPage() {
       {!sent && (
         <form onSubmit={onSubmit} className="space-y-4">
           <Field label="Email">
-            <Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@team.com" />
+            <Input type="email" required autoFocus autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" />
           </Field>
-          <Button type="submit" size="lg" className="w-full" disabled={loading}>
-            {loading ? "Sending…" : "Send reset link →"}
+          <Button type="submit" size="lg" className="w-full" loading={loading}>
+            Send reset link
           </Button>
         </form>
       )}

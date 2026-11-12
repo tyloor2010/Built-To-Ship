@@ -1,7 +1,7 @@
 import logo from "@/assets/synexis-logo.png";
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { Card, Sticker } from "@/components/pc/primitives";
+import { Card } from "@/components/pc/primitives";
 
 export function AuthShell({
   eyebrow,
@@ -10,7 +10,7 @@ export function AuthShell({
   children,
   footer,
 }: {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   sub?: string;
   children: ReactNode;
@@ -26,15 +26,18 @@ export function AuthShell({
       </Link>
 
       <Card className="w-full max-w-md p-7">
-        <Sticker tone="lime" rotate={-3}>
-          {eyebrow}
-        </Sticker>
-        <h1 className="display mt-5 text-4xl uppercase">{title}</h1>
-        {sub && <p className="mt-2 text-sm font-semibold text-muted-foreground">{sub}</p>}
+        {eyebrow && <p className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">{eyebrow}</p>}
+        <h1 className="display mt-2 text-4xl uppercase">{title}</h1>
+        {sub && <p className="mt-2 text-sm text-muted-foreground">{sub}</p>}
         <div className="mt-6">{children}</div>
       </Card>
 
-      {footer && <div className="mt-6 text-sm font-bold">{footer}</div>}
+      {footer && <div className="mt-6 text-sm font-semibold">{footer}</div>}
+      <p className="mt-4 text-xs text-muted-foreground">
+        <Link to="/terms" className="underline underline-offset-4 hover:text-foreground">Terms</Link>
+        {" · "}
+        <Link to="/privacy" className="underline underline-offset-4 hover:text-foreground">Privacy</Link>
+      </p>
     </div>
   );
 }

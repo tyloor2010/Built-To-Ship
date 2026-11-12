@@ -2,12 +2,11 @@ import logo from "@/assets/synexis-logo.png";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   Bell,
-  Bot,
   CalendarDays,
   FileText,
   FolderKanban,
-  Gauge,
   HelpCircle,
+  User,
   LayoutDashboard,
   ListChecks,
   LogOut,
@@ -21,11 +20,19 @@ import {
 import { useEffect, useState, type ReactNode } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Avatar, Badge, Button } from "@/components/pc/primitives";
+import { Avatar } from "@/components/pc/primitives";
 import { useWorkspaceCtx } from "@/components/app/workspace-context";
 import { useNotifications } from "@/lib/pc/data";
 import { CommandPalette } from "@/components/app/CommandPalette";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const MAIN = [
   { to: "/app", label: "Overview", icon: LayoutDashboard, exact: true },
@@ -38,16 +45,14 @@ const MAIN = [
 
 const INSIGHTS = [
   { to: "/app/analytics", label: "Analytics", icon: PieChart },
-  { to: "/app/reports", label: "Reports", icon: Gauge },
-  { to: "/app/ai", label: "AI Commander", icon: Bot },
 ] as const;
 
 const MOBILE = [
   { to: "/app", label: "Home", icon: LayoutDashboard, exact: true },
   { to: "/app/projects", label: "Projects", icon: FolderKanban },
   { to: "/app/tasks", label: "Tasks", icon: ListChecks },
-  { to: "/app/ai", label: "AI", icon: Bot },
-  { to: "/app/settings/profile", label: "You", icon: Settings },
+  { to: "/app/calendar", label: "Calendar", icon: CalendarDays },
+  { to: "/app/settings/profile", label: "Settings", icon: Settings },
 ] as const;
 
 function useActive() {
@@ -75,8 +80,8 @@ function NavItem({
       to={to}
       onClick={onClick}
       className={cn(
-        "flex items-center gap-3 rounded-[14px] px-3 py-2.5 text-sm font-bold transition-colors",
-        active ? "ink-2 bg-primary text-primary-foreground shadow-hard-sm" : "text-foreground/70 hover:bg-muted",
+        "flex min-h-11 items-center gap-3 rounded-[14px] border-2 px-3 text-sm font-bold transition-colors duration-150",
+        active ? "border-foreground bg-primary text-primary-foreground" : "border-transparent text-foreground/75 hover:bg-muted",
       )}
     >
       <Icon className="size-4 shrink-0" />
@@ -99,6 +104,10 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [paletteOpen, setPaletteOpen] = useState(false);
   const { data: notifications } = useNotifications(userId);
   const unread = (notifications ?? []).filter((n) => !n.read).length;
+  const [isMac, setIsMac] = useState(true);
+  useEffect(() => {
+    setIsMac(/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent));
+  }, []);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -130,12 +139,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       <div className="rounded-[16px] ink-2 bg-card p-3 shadow-hard-sm">
         <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Workspace</div>
         <div className="mt-1 flex items-center gap-2">
-          <span className="text-xl">{workspace.logo_emoji ?? "🚀"}</span>
           <span className="truncate text-sm font-black">{workspace.name}</span>
         </div>
-        <Badge tone="blue" className="mt-2">
-          {role}
-        </Badge>
+        <span className="mt-1 block text-xs text-muted-foreground">{role.charAt(0).toUpperCase() + role.slice(1)}</span>
       </div>
 
       <nav className="space-y-1">
@@ -187,11 +193,11 @@ export function AppShell({ children }: { children: ReactNode }) {
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-foreground/40" onClick={() => setMobileOpen(false)} />
-          <div className="absolute inset-y-0 left-0 w-72 border-r-3 border-foreground bg-sidebar">
+          <div role="dialog" aria-label="Menu" className="absolute inset-y-0 left-0 w-72 border-r-3 border-foreground bg-sidebar">
             <button
               aria-label="Close menu"
               onClick={() => setMobileOpen(false)}
-              className="absolute right-3 top-3 grid size-9 place-items-center rounded-[12px] ink-2 bg-card"
+              className="absolute right-3 top-3 grid size-11 place-items-center rounded-[12px] ink-2 bg-card"
             >
               <X className="size-4" />
             </button>
@@ -206,7 +212,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-3 py-2.5 sm:px-5">
             <button
               aria-label="Open menu"
-              className="grid size-10 place-items-center rounded-[12px] ink-2 bg-card lg:hidden"
+              className="grid size-11 place-items-center rounded-[12px] ink-2 bg-card lg:hidden"
               onClick={() => setMobileOpen(true)}
             >
               <Menu className="size-4" />
@@ -214,35 +220,56 @@ export function AppShell({ children }: { children: ReactNode }) {
 
             <button
               onClick={() => setPaletteOpen(true)}
-              className="flex min-w-0 items-center gap-2 rounded-[14px] ink-2 bg-card px-3 py-2.5 text-left text-sm font-semibold text-muted-foreground hover:bg-muted"
+              aria-label="Search"
+              className="flex min-h-11 min-w-0 max-w-xl items-center gap-2 rounded-[14px] ink-2 bg-card px-3 text-left text-sm font-semibold text-muted-foreground hover:bg-muted"
             >
               <Search className="size-4 shrink-0" />
-              <span className="truncate">Search projects, tasks, people…</span>
-              <kbd className="ml-auto hidden shrink-0 rounded-[8px] ink-2 bg-background px-1.5 py-0.5 text-[10px] font-black sm:block">
-                ⌘K
+              <span className="truncate">Search projects, tasks, people</span>
+              <kbd className="ml-auto hidden shrink-0 rounded-[8px] ink-2 bg-background px-1.5 py-0.5 text-[11px] font-bold sm:block">
+                {isMac ? "⌘K" : "Ctrl K"}
               </kbd>
             </button>
 
             <div className="flex items-center gap-2">
               <Link
                 to="/app/notifications"
-                aria-label="Notifications"
-                className="relative grid size-10 place-items-center rounded-[12px] ink-2 bg-card hover:bg-muted"
+                aria-label={unread ? `Notifications, ${unread} unread` : "Notifications"}
+                className="relative grid size-11 place-items-center rounded-[12px] ink-2 bg-card hover:bg-muted"
               >
                 <Bell className="size-4" />
-                {unread > 0 && <span className="absolute -right-1 -top-1 size-3.5 rounded-full ink-2 bg-lime" />}
+                {unread > 0 && (
+                  <span className="absolute -right-1.5 -top-1.5 grid min-w-5 place-items-center rounded-full ink-2 bg-lime px-1 text-[11px] font-black text-lime-foreground">
+                    {unread > 9 ? "9+" : unread}
+                  </span>
+                )}
               </Link>
-              <Link to="/app/settings/profile" aria-label="Your profile">
-                <Avatar name={profile?.full_name ?? profile?.email} src={profile?.avatar_url} size={40} />
-              </Link>
-              <Button variant="ghost" size="iconSm" aria-label="Sign out" onClick={signOut} className="hidden sm:inline-flex">
-                <LogOut className="size-4" />
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger aria-label="Account menu" className="rounded-full focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-primary">
+                  <Avatar name={profile?.full_name ?? profile?.email} src={profile?.avatar_url} size={44} />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 rounded-[14px] border-2 border-foreground p-1 shadow-hard-sm">
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="truncate text-sm font-bold">{profile?.full_name ?? "Your account"}</div>
+                    <div className="truncate text-xs text-muted-foreground">{profile?.email}</div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onSelect={() => navigate({ to: "/app/settings/profile", hash: "profile" })}>
+                    <User className="size-4" /> Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => navigate({ to: "/app/settings/profile" })}>
+                    <Settings className="size-4" /> Settings
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onSelect={() => void signOut()}>
+                    <LogOut className="size-4" /> Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </header>
 
-        <main className="px-3 pb-28 pt-5 sm:px-5 lg:pb-10">{children}</main>
+        <main className="px-4 pb-28 pt-6 sm:px-6 lg:pb-12 xl:px-8"><div className="page">{children}</div></main>
       </div>
 
       {/* mobile bottom nav */}
@@ -255,7 +282,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 key={i.to}
                 to={i.to}
                 className={cn(
-                  "flex flex-col items-center gap-1 py-2.5 text-[10px] font-black uppercase tracking-wider",
+                  "flex min-h-14 flex-col items-center justify-center gap-1 text-[11px] font-bold",
                   active ? "text-primary" : "text-muted-foreground",
                 )}
               >

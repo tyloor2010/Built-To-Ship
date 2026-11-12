@@ -3,14 +3,15 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthShell } from "@/components/auth/AuthShell";
-import { Button, Field, Input } from "@/components/pc/primitives";
+import { Button, Field } from "@/components/pc/primitives";
+import { PasswordInput } from "@/components/auth/PasswordInput";
 
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
     meta: [
-      { title: "Set a new password — SYNEXIS" },
+      { title: "Set a new password | SYNEXIS" },
       { name: "description", content: "Choose a new password for your SYNEXIS account." },
-      { property: "og:title", content: "Set a new password — SYNEXIS" },
+      { property: "og:title", content: "Set a new password | SYNEXIS" },
       { property: "og:description", content: "Choose a new password for your account." },
     ],
   }),
@@ -28,22 +29,22 @@ function ResetPasswordPage() {
     const { error } = await supabase.auth.updateUser({ password });
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      toast.error(`Could not update the password. ${error.message}`);
       return;
     }
-    toast.success("Password updated.");
+    toast.success("Password updated");
     navigate({ to: "/app", replace: true });
     return;
   }
 
   return (
-    <AuthShell eyebrow="Security" title="New password." sub="Pick something strong and memorable.">
+    <AuthShell title="Set a new password" sub="Choose a password you do not use anywhere else.">
       <form onSubmit={onSubmit} className="space-y-4">
-        <Field label="New password" hint="At least 6 characters.">
-          <Input type="password" required minLength={6} autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
+        <Field label="New password" hint="At least 8 characters.">
+          <PasswordInput required autoFocus minLength={8} autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </Field>
-        <Button type="submit" size="lg" className="w-full" disabled={loading}>
-          {loading ? "Saving…" : "Update password →"}
+        <Button type="submit" size="lg" className="w-full" loading={loading}>
+          Update password
         </Button>
       </form>
     </AuthShell>

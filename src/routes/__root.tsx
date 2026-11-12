@@ -16,20 +16,14 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
+    <div className="dotted-bg flex min-h-screen items-center justify-center bg-background px-4">
+      <div className="w-full max-w-md rounded-[22px] border-3 border-foreground bg-card p-8 text-center shadow-hard">
+        <p className="display text-8xl text-primary">404</p>
+        <h1 className="mt-4 text-xl font-bold" style={{ fontFamily: "var(--font-sans)" }}>This page does not exist</h1>
+        <p className="mt-2 text-sm text-muted-foreground">The link may be old or mistyped. Check the address, or go back to the home page.</p>
+        <div className="mt-6 flex flex-wrap justify-center gap-2">
+          <Link to="/" className="inline-flex h-11 items-center rounded-[14px] border-2 border-foreground bg-primary px-5 text-sm font-bold text-primary-foreground shadow-hard-sm">Go to home</Link>
+          <Link to="/app" className="inline-flex h-11 items-center rounded-[14px] border-2 border-foreground bg-card px-5 text-sm font-bold shadow-hard-sm">Open workspace</Link>
         </div>
       </div>
     </div>
@@ -45,12 +39,12 @@ function ErrorComponent({ error, reset }: import("@tanstack/react-router").Error
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+      <div className="w-full max-w-md rounded-[22px] border-3 border-foreground bg-card p-8 text-center shadow-hard">
+        <h1 className="text-xl font-bold" style={{ fontFamily: "var(--font-sans)" }}>
+          This page did not load
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          Something went wrong on our side. Try again, and if it keeps happening, go back to the home page.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -58,13 +52,13 @@ function ErrorComponent({ error, reset }: import("@tanstack/react-router").Error
               router.invalidate();
               reset();
             }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center h-11 rounded-[14px] border-2 border-foreground bg-primary px-5 text-sm font-bold text-primary-foreground shadow-hard-sm"
           >
             Try again
           </button>
           <a
             href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+            className="inline-flex items-center justify-center h-11 rounded-[14px] border-2 border-foreground bg-card px-5 text-sm font-bold shadow-hard-sm"
           >
             Go home
           </a>
@@ -79,11 +73,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "SYNEXIS — Run projects. Ship faster." },
+      { title: "SYNEXIS | Project management for small teams" },
       {
         name: "description",
         content:
-          "SYNEXIS is the project management platform for modern teams — plan projects, assign tasks, track deadlines and get AI-powered insights in one workspace.",
+          "SYNEXIS helps small teams plan projects, assign tasks and meet deadlines in one shared workspace.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -131,7 +125,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
-      <Toaster position="top-right" toastOptions={{ className: "ink-2 rounded-[14px] font-bold" }} />
+      <Toaster position="top-right" toastOptions={{ className: "ink-2 rounded-[14px] font-semibold" }} />
     </QueryClientProvider>
   );
 }

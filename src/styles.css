@@ -82,7 +82,7 @@
   --secondary-foreground: oklch(0.16 0.02 265);
 
   --muted: oklch(0.95 0.008 95);
-  --muted-foreground: oklch(0.48 0.02 265);
+  --muted-foreground: oklch(0.44 0.02 265);
 
   --accent: oklch(0.93 0.02 260);
   --accent-foreground: oklch(0.16 0.02 265);
@@ -139,12 +139,16 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  h1,
-  h2,
-  h3 {
+  h1 {
     font-family: var(--font-display);
     letter-spacing: -0.03em;
     line-height: 0.95;
+  }
+
+  h2,
+  h3 {
+    letter-spacing: -0.01em;
+    line-height: 1.2;
   }
 
   ::selection {
@@ -228,4 +232,35 @@
 
 @utility animate-marquee {
   animation: pc-marquee 26s linear infinite;
+}
+
+/* ---------- design tokens: spacing, borders, shadows, motion ---------- */
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --border-container: 3px;
+  --border-control: 2px;
+  --motion-fast: 140ms;
+}
+
+@utility page {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1200px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
