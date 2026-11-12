@@ -4,17 +4,20 @@ import { LandingPage } from "@/components/marketing/LandingPage";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "SYNEXIS — Run projects. Ship faster." },
+      { title: "SYNEXIS — Project Management Platform for Modern Teams" },
       {
         name: "description",
         content:
-          "SYNEXIS is one bold workspace for projects, tasks, teams, timelines, files and an AI project assistant.",
+          "SYNEXIS helps teams plan projects, manage tasks, hit deadlines and collaborate in one powerful workspace — with Kanban boards, timelines, analytics and an AI project assistant.",
       },
-      { property: "og:title", content: "SYNEXIS — Run projects. Ship faster." },
+      { property: "og:title", content: "SYNEXIS — Project Management Platform for Modern Teams" },
       {
         property: "og:description",
-        content: "One workspace for projects, tasks, teams, deadlines and AI insight.",
+        content:
+          "Plan, track and deliver every project with your team in one workspace — Kanban, timelines, analytics and AI insights.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: LandingPage,

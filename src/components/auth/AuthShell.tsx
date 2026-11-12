@@ -1,3 +1,4 @@
+import logo from "@/assets/synexis-logo.png";
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { Card, Sticker } from "@/components/pc/primitives";
@@ -18,9 +19,7 @@ export function AuthShell({
   return (
     <div className="dotted-bg flex min-h-screen flex-col items-center justify-center px-4 py-10">
       <Link to="/" className="mb-8 flex items-center gap-3">
-        <span className="grid size-11 place-items-center rounded-[14px] ink bg-foreground text-background shadow-hard-sm">
-          <span className="display text-lg">SX</span>
-        </span>
+        <img src={logo} alt="SYNEXIS logo" width={44} height={44} className="size-11 shrink-0 object-contain" />
         <span className="display text-sm leading-[0.85]">
           SYNEXIS
         </span>
