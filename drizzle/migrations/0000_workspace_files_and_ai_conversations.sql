@@ -1,0 +1,17 @@
+DROP POLICY "files delete" ON public.files;
+CREATE POLICY "files delete" ON public.files FOR DELETE TO authenticated USING (uploaded_by = auth.uid() OR public.workspace_role(workspace_id) = 'owner');
+CREATE POLICY "workspace attachment read" ON storage.objects FOR SELECT TO authenticated USING (bucket_id = 'workspace-files' AND EXISTS (SELECT 1 FROM public.workspace_members m WHERE m.workspace_id::text = split_part(name,'/',1) AND m.user_id = auth.uid() AND m.status = 'active'));
+CREATE POLICY "workspace attachment upload" ON storage.objects FOR INSERT TO authenticated WITH CHECK (bucket_id = 'workspace-files' AND split_part(name,'/',2) = auth.uid()::text AND EXISTS (SELECT 1 FROM public.workspace_members m WHERE m.workspace_id::text = split_part(name,'/',1) AND m.user_id = auth.uid() AND m.status = 'active' AND m.role IN ('owner','admin','member')));
+CREATE POLICY "workspace attachment delete" ON storage.objects FOR DELETE TO authenticated USING (bucket_id = 'workspace-files' AND EXISTS (SELECT 1 FROM public.workspace_members m WHERE m.workspace_id::text = split_part(name,'/',1) AND m.user_id = auth.uid() AND m.status = 'active' AND (m.role = 'owner' OR split_part(name,'/',2) = auth.uid()::text)));
+CREATE TABLE public.ai_conversations (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), workspace_id uuid NOT NULL REFERENCES public.workspaces(id) ON DELETE CASCADE, user_id uuid NOT NULL, title text NOT NULL DEFAULT 'New conversation', created_at timestamptz NOT NULL DEFAULT now());
+GRANT SELECT, INSERT, DELETE ON public.ai_conversations TO authenticated;
+GRANT ALL ON public.ai_conversations TO service_role;
+ALTER TABLE public.ai_conversations ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "own workspace conversations" ON public.ai_conversations FOR ALL TO authenticated USING (user_id = auth.uid() AND is_workspace_member(workspace_id)) WITH CHECK (user_id = auth.uid() AND is_workspace_member(workspace_id));
+CREATE TABLE public.ai_messages (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), conversation_id uuid NOT NULL REFERENCES public.ai_conversations(id) ON DELETE CASCADE, role text NOT NULL CHECK (role IN ('user','assistant')), parts jsonb NOT NULL, created_at timestamptz NOT NULL DEFAULT now());
+GRANT SELECT, INSERT ON public.ai_messages TO authenticated;
+GRANT ALL ON public.ai_messages TO service_role;
+ALTER TABLE public.ai_messages ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "own conversation messages" ON public.ai_messages FOR SELECT TO authenticated USING (EXISTS (SELECT 1 FROM public.ai_conversations c WHERE c.id = conversation_id AND c.user_id = auth.uid() AND is_workspace_member(c.workspace_id)));
+CREATE POLICY "own conversation message insert" ON public.ai_messages FOR INSERT TO authenticated WITH CHECK (EXISTS (SELECT 1 FROM public.ai_conversations c WHERE c.id = conversation_id AND c.user_id = auth.uid() AND is_workspace_member(c.workspace_id)));
+CREATE INDEX ai_messages_conversation_time ON public.ai_messages(conversation_id,created_at);

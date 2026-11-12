@@ -4,8 +4,12 @@ import { ArrowLeft, SearchX } from "lucide-react";
 import { Button, Card, EmptyState, ProgressBar, Skeleton, StatusPill, Avatar, formatDate, labelize, relativeTime } from "@/components/pc/primitives";
 import { useWorkspaceCtx } from "@/components/app/workspace-context";
 import { projectProgress, useActivity, useFiles, useMembers, useProject, useTasks } from "@/lib/pc/data";
+import { WorkspaceFiles } from "@/components/app/WorkspaceFiles";
+import { PageHeader } from "@/components/pc/primitives";
+import { pageMeta } from "@/lib/pc/page-meta";
 
 export const Route = createFileRoute("/_authenticated/app/projects/$projectId")({
+  head: () => pageMeta("Project details", "Track tasks, attachments and progress in your workspace project."),
   component: ProjectDetail,
 });
 
@@ -22,7 +26,7 @@ function ProjectDetail() {
   const { data: activity } = useActivity(workspace.id, projectId, 20);
 
   if (isLoading) return <Skeleton className="h-72" />;
-  if (!project) return <EmptyState icon={SearchX} title="Project not found" sub="It may have been deleted, or the link is wrong." action={<Button asChild variant="outline"><Link to="/app/projects">Back to projects</Link></Button>} />;
+  if (!project || project.workspace_id !== workspace.id) return <EmptyState icon={SearchX} title="Project not found" sub="It may have been deleted, or the link is wrong." action={<Button asChild variant="outline"><Link to="/app/projects">Back to projects</Link></Button>} />;
 
   const list = tasks ?? [];
   const progress = projectProgress(list, project.id);
@@ -32,16 +36,7 @@ function ProjectDetail() {
   return (
     <div className="space-y-6">
       <Link to="/app/projects" className="inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-muted-foreground hover:text-foreground"><ArrowLeft className="size-4" /> All projects</Link>
-      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
-        <div className="min-w-0">
-          <div className="flex items-center gap-3">
-            <span className="size-6 shrink-0 rounded-full ink-2" style={{ background: project.color }} />
-            <h1 className="display truncate text-4xl uppercase sm:text-5xl">{project.name}</h1>
-          </div>
-          {project.description && <p className="mt-2 text-sm text-muted-foreground">{project.description}</p>}
-        </div>
-        <StatusPill value={project.status} />
-      </header>
+      <PageHeader title={project.name} description={project.description} actions={<StatusPill value={project.status} />} />
 
       <div role="tablist" className="-mx-4 flex gap-1 overflow-x-auto border-b-2 border-foreground/15 px-4 sm:mx-0 sm:px-0">
         {TABS.map((t) => (
@@ -114,13 +109,7 @@ function ProjectDetail() {
       )}
 
       {tab === "Files" && (
-        <Card className="p-4">
-          {!files?.length ? <p className="p-4 text-sm font-semibold text-muted-foreground">No files are attached to this project.</p> : (
-            <ul className="divide-y-2 divide-foreground/10">
-              {files.map((f) => (<li key={f.id} className="py-3 text-sm font-bold">{f.name}</li>))}
-            </ul>
-          )}
-        </Card>
+        <WorkspaceFiles projectId={projectId} />
       )}
 
       {tab === "Activity" && (

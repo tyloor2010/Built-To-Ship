@@ -1,31 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Card, PageHeader } from "@/components/pc/primitives";
-
-export const Route = createFileRoute("/_authenticated/app/help")({
-  head: () => ({ meta: [{ title: "Help | SYNEXIS" }] }),
-  component: Page,
-});
-
+import { useState } from "react";
+import { HelpCircle, Mail } from "lucide-react";
+import { Button, PageHeader, Input, EmptyState } from "@/components/pc/primitives";
+import { pageMeta } from "@/lib/pc/page-meta";
+export const Route = createFileRoute("/_authenticated/app/help")({ head: () => pageMeta("Help", "Find answers, keyboard shortcuts and contact SYNEXIS."), component: Page });
 const FAQ = [
-  ["How do I create a project?", "Open Projects and choose New project. Give it a name, a color and an optional deadline."],
-  ["How do I move a task?", "On My Tasks, drag a card to another column. With a keyboard, focus the card and press the left or right arrow key."],
-  ["Where do deadlines show up?", "Tasks with a due date appear on the Calendar and on each project's Timeline tab."],
-  ["How do I find something fast?", "Press Ctrl K (or ⌘K on a Mac) to search projects, tasks, people and pages."],
-  ["How do I rename my workspace?", "Go to Settings and edit the name under Workspace. Only owners and admins can change it."],
+  ["How do I create a project?", "Open Projects and choose New project. Add a name and optional deadline."],
+  ["How do I move a task?", "Drag a card between columns in My Tasks. You can also focus a card and use the left and right arrow keys."],
+  ["Where can I see deadlines?", "Calendar has month and week views. Filter by project or assignee, then select a task to see or edit its details."],
+  ["How do I upload or delete a file?", "Choose Upload file on Files or a project's Files tab. Only the uploader or workspace owner can delete an attachment."],
+  ["How do reports work?", "Reports counts tasks completed and created in your date range, open overdue tasks due in that range, and workspace activity. Export CSV or choose Print to save a PDF."],
+  ["What can AI Commander see?", "Only projects and tasks in your current workspace. Your saved conversations are private to your account. Suggestions do not change any tasks."],
+  ["How do I rename my workspace?", "Go to Settings and edit Workspace. Only owners and admins can rename it."],
+  ["Who can edit tasks?", "Owners, admins and members can edit tasks. Viewers can read them."],
 ];
-
-function Page() {
-  return (
-    <div className="space-y-6">
-      <PageHeader title="Help" description="Answers to common questions about SYNEXIS." />
-      <Card className="divide-y-2 divide-foreground/10 p-2">
-        {FAQ.map(([q, a]) => (
-          <details key={q} className="group p-4">
-            <summary className="cursor-pointer list-none text-sm font-bold marker:hidden">{q}</summary>
-            <p className="mt-2 text-sm text-muted-foreground">{a}</p>
-          </details>
-        ))}
-      </Card>
-    </div>
-  );
-}
+function Page() { const [search, setSearch] = useState(""); const filtered = FAQ.filter(pair => pair.join(" ").toLowerCase().includes(search.toLowerCase())); return <div className="space-y-6"><PageHeader title="Help" description="Answers and support for your workspace." /><Input aria-label="Search frequently asked questions" placeholder="Search questions" value={search} onChange={e => setSearch(e.target.value)} className="sm:max-w-lg" /><section>{filtered.length ? <div className="divide-y border-y-2 border-foreground/15">{filtered.map(([q, a]) => <details key={q} className="py-4"><summary className="min-h-8 cursor-pointer text-sm font-bold focus-visible:outline-2 focus-visible:outline-primary">{q}</summary><p className="mt-2 max-w-3xl text-sm text-muted-foreground">{a}</p></details>)}</div> : <EmptyState bare icon={HelpCircle} title="No matching questions" sub="Try a different search, or contact us below." />}</section><section className="space-y-3"><h2 className="text-lg font-bold">Keyboard shortcuts</h2><dl className="grid max-w-2xl gap-3 text-sm sm:grid-cols-2"><dt><kbd className="rounded border border-foreground px-2 py-1">Ctrl K / ⌘K</kbd></dt><dd>Open workspace search</dd><dt><kbd className="rounded border border-foreground px-2 py-1">← / →</kbd></dt><dd>Move a focused task card</dd><dt><kbd className="rounded border border-foreground px-2 py-1">Esc</kbd></dt><dd>Close a dialog</dd><dt><kbd className="rounded border border-foreground px-2 py-1">Enter</kbd></dt><dd>Send an AI message</dd><dt><kbd className="rounded border border-foreground px-2 py-1">Shift Enter</kbd></dt><dd>Add a line to an AI message</dd></dl></section><section className="space-y-3 border-t-2 border-foreground/15 pt-5"><h2 className="text-lg font-bold">Contact</h2><Button asChild variant="outline" className="max-w-full whitespace-normal break-all"><a href="mailto:moonasser.official@gmail.com"><Mail /> moonasser.official@gmail.com</a></Button></section></div>; }

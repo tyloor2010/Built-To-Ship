@@ -25,6 +25,7 @@ import { Route as AuthenticatedAppCalendarRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAppFilesRouteImport } from './routes/_authenticated/app/files'
 import { Route as AuthenticatedAppHelpRouteImport } from './routes/_authenticated/app/help'
 import { Route as AuthenticatedAppNotificationsRouteImport } from './routes/_authenticated/app/notifications'
+import { Route as AuthenticatedAppReportsRouteImport } from './routes/_authenticated/app/reports'
 import { Route as AuthenticatedAppTasksRouteImport } from './routes/_authenticated/app/tasks'
 import { Route as AuthenticatedAppTeamRouteImport } from './routes/_authenticated/app/team'
 import { Route as AuthenticatedAppProjectsIndexRouteImport } from './routes/_authenticated/app/projects/index'
@@ -113,6 +114,11 @@ const AuthenticatedAppNotificationsRoute =
     path: '/notifications',
     getParentRoute: () => AuthenticatedAppRouteRoute,
   } as any)
+const AuthenticatedAppReportsRoute = AuthenticatedAppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AuthenticatedAppRouteRoute,
+} as any)
 const AuthenticatedAppTasksRoute = AuthenticatedAppTasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
@@ -157,6 +163,7 @@ export interface FileRoutesByFullPath {
   '/app/files': typeof AuthenticatedAppFilesRoute
   '/app/help': typeof AuthenticatedAppHelpRoute
   '/app/notifications': typeof AuthenticatedAppNotificationsRoute
+  '/app/reports': typeof AuthenticatedAppReportsRoute
   '/app/tasks': typeof AuthenticatedAppTasksRoute
   '/app/team': typeof AuthenticatedAppTeamRoute
   '/app/': typeof AuthenticatedAppIndexRoute
@@ -178,6 +185,7 @@ export interface FileRoutesByTo {
   '/app/files': typeof AuthenticatedAppFilesRoute
   '/app/help': typeof AuthenticatedAppHelpRoute
   '/app/notifications': typeof AuthenticatedAppNotificationsRoute
+  '/app/reports': typeof AuthenticatedAppReportsRoute
   '/app/tasks': typeof AuthenticatedAppTasksRoute
   '/app/team': typeof AuthenticatedAppTeamRoute
   '/app': typeof AuthenticatedAppIndexRoute
@@ -202,6 +210,7 @@ export interface FileRoutesById {
   '/_authenticated/app/files': typeof AuthenticatedAppFilesRoute
   '/_authenticated/app/help': typeof AuthenticatedAppHelpRoute
   '/_authenticated/app/notifications': typeof AuthenticatedAppNotificationsRoute
+  '/_authenticated/app/reports': typeof AuthenticatedAppReportsRoute
   '/_authenticated/app/tasks': typeof AuthenticatedAppTasksRoute
   '/_authenticated/app/team': typeof AuthenticatedAppTeamRoute
   '/_authenticated/app/': typeof AuthenticatedAppIndexRoute
@@ -226,6 +235,7 @@ export interface FileRouteTypes {
     | '/app/files'
     | '/app/help'
     | '/app/notifications'
+    | '/app/reports'
     | '/app/tasks'
     | '/app/team'
     | '/app/'
@@ -247,6 +257,7 @@ export interface FileRouteTypes {
     | '/app/files'
     | '/app/help'
     | '/app/notifications'
+    | '/app/reports'
     | '/app/tasks'
     | '/app/team'
     | '/app'
@@ -270,6 +281,7 @@ export interface FileRouteTypes {
     | '/_authenticated/app/files'
     | '/_authenticated/app/help'
     | '/_authenticated/app/notifications'
+    | '/_authenticated/app/reports'
     | '/_authenticated/app/tasks'
     | '/_authenticated/app/team'
     | '/_authenticated/app/'
@@ -403,6 +415,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAppNotificationsRouteImport
       parentRoute: typeof AuthenticatedAppRouteRoute
     }
+    '/_authenticated/app/reports': {
+      id: '/_authenticated/app/reports'
+      path: '/reports'
+      fullPath: '/app/reports'
+      preLoaderRoute: typeof AuthenticatedAppReportsRouteImport
+      parentRoute: typeof AuthenticatedAppRouteRoute
+    }
     '/_authenticated/app/tasks': {
       id: '/_authenticated/app/tasks'
       path: '/tasks'
@@ -447,6 +466,7 @@ interface AuthenticatedAppRouteRouteChildren {
   AuthenticatedAppFilesRoute: typeof AuthenticatedAppFilesRoute
   AuthenticatedAppHelpRoute: typeof AuthenticatedAppHelpRoute
   AuthenticatedAppNotificationsRoute: typeof AuthenticatedAppNotificationsRoute
+  AuthenticatedAppReportsRoute: typeof AuthenticatedAppReportsRoute
   AuthenticatedAppTasksRoute: typeof AuthenticatedAppTasksRoute
   AuthenticatedAppTeamRoute: typeof AuthenticatedAppTeamRoute
   AuthenticatedAppIndexRoute: typeof AuthenticatedAppIndexRoute
@@ -461,6 +481,7 @@ const AuthenticatedAppRouteRouteChildren: AuthenticatedAppRouteRouteChildren = {
   AuthenticatedAppFilesRoute: AuthenticatedAppFilesRoute,
   AuthenticatedAppHelpRoute: AuthenticatedAppHelpRoute,
   AuthenticatedAppNotificationsRoute: AuthenticatedAppNotificationsRoute,
+  AuthenticatedAppReportsRoute: AuthenticatedAppReportsRoute,
   AuthenticatedAppTasksRoute: AuthenticatedAppTasksRoute,
   AuthenticatedAppTeamRoute: AuthenticatedAppTeamRoute,
   AuthenticatedAppIndexRoute: AuthenticatedAppIndexRoute,

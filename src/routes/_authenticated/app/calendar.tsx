@@ -1,74 +1,36 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button, Card, PageHeader } from "@/components/pc/primitives";
+import { useState } from "react";
+import { addDays, addMonths, addWeeks, startOfWeek, startOfMonth, endOfMonth, endOfWeek, eachDayOfInterval, format, isSameMonth } from "date-fns";
+import { ChevronLeft, ChevronRight, CalendarDays } from "lucide-react";
+import { Button, PageHeader, Select, Skeleton, EmptyState } from "@/components/pc/primitives";
 import { useWorkspaceCtx } from "@/components/app/workspace-context";
-import { useTasks } from "@/lib/pc/data";
+import { TaskDetails } from "@/components/app/TaskDetails";
+import { useTasks, useProjects, useMembers, type Task } from "@/lib/pc/data";
+import { dateKey, isOverdue } from "@/lib/pc/workspace-tools";
+import { pageMeta } from "@/lib/pc/page-meta";
 import { cn } from "@/lib/utils";
-
-export const Route = createFileRoute("/_authenticated/app/calendar")({
-  head: () => ({ meta: [{ title: "Calendar | SYNEXIS" }] }),
-  component: Page,
-});
-
-const pad = (n: number) => String(n).padStart(2, "0");
-
+export const Route = createFileRoute("/_authenticated/app/calendar")({ head: () => pageMeta("Calendar", "Task deadlines in month and week views for your workspace."), component: Page });
 function Page() {
   const { workspace } = useWorkspaceCtx();
-  const { data: tasks } = useTasks(workspace.id);
-  const [cursor, setCursor] = useState(() => { const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 1); });
-  const y = cursor.getFullYear(), m = cursor.getMonth();
-  const first = (new Date(y, m, 1).getDay() + 6) % 7;
-  const days = new Date(y, m + 1, 0).getDate();
-  const todayKey = new Date().toISOString().slice(0, 10);
-  const byDay = useMemo(() => {
-    const map: Record<string, typeof tasks> = {};
-    for (const t of tasks ?? []) if (t.due_date) (map[t.due_date] ??= []).push(t);
-    return map;
-  }, [tasks]);
-  const cells = Array.from({ length: Math.ceil((first + days) / 7) * 7 }, (_, i) => i - first + 1);
-  const scheduled = (tasks ?? []).filter((t) => t.due_date?.startsWith(`${y}-${pad(m + 1)}`)).length;
-
-  return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Calendar"
-        description={scheduled ? `${scheduled} ${scheduled === 1 ? "task is" : "tasks are"} due this month.` : "Tasks with a due date appear on the day they are due."}
-        actions={
-          <div className="flex items-center gap-2">
-            <Button size="iconSm" variant="outline" aria-label="Previous month" onClick={() => setCursor(new Date(y, m - 1, 1))}><ChevronLeft /></Button>
-            <span className="min-w-36 text-center text-sm font-bold">{cursor.toLocaleDateString(undefined, { month: "long", year: "numeric" })}</span>
-            <Button size="iconSm" variant="outline" aria-label="Next month" onClick={() => setCursor(new Date(y, m + 1, 1))}><ChevronRight /></Button>
-          </div>
-        }
-      />
-      <Card className="overflow-x-auto p-0">
-        <div className="grid min-w-[700px] grid-cols-7">
-          {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => (
-            <div key={d} className="border-b-2 border-foreground px-3 py-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground">{d}</div>
-          ))}
-          {cells.map((d, i) => {
-            const key = `${y}-${pad(m + 1)}-${pad(d)}`;
-            const inMonth = d >= 1 && d <= days;
-            const items = inMonth ? byDay[key] ?? [] : [];
-            return (
-              <div key={i} className={cn("min-h-28 border-b border-r border-foreground/15 p-2", !inMonth && "bg-muted/50")}>
-                {inMonth && (
-                  <>
-                    <span className={cn("grid size-7 place-items-center rounded-full text-xs font-bold", key === todayKey && "bg-primary text-primary-foreground")}>{d}</span>
-                    <ul className="mt-1 space-y-1">
-                      {items.slice(0, 3).map((t) => (
-                        <li key={t.id} className={cn("truncate rounded-[8px] border-2 border-foreground px-1.5 py-0.5 text-xs font-semibold", t.status === "done" ? "bg-lime line-through" : "bg-card")}>{t.title}</li>
-                      ))}
-                      {items.length > 3 && <li className="text-xs text-muted-foreground">+{items.length - 3} more</li>}
-                    </ul>
-                  </>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </Card>
-    </div>
-  );
+  const { data: tasks = [], isLoading, error } = useTasks(workspace.id);
+  const { data: projects = [] } = useProjects(workspace.id);
+  const { data: members = [] } = useMembers(workspace.id);
+  const [cursor, setCursor] = useState(new Date());
+  const [view, setView] = useState<"month" | "week">("month");
+  const [project, setProject] = useState(""); const [assignee, setAssignee] = useState("");
+  const [selected, setSelected] = useState<Task | null>(null);
+  const start = startOfWeek(view === "month" ? startOfMonth(cursor) : cursor, { weekStartsOn: 1 });
+  const end = view === "month" ? endOfWeek(endOfMonth(cursor), { weekStartsOn: 1 }) : addDays(start, 6);
+  const days = eachDayOfInterval({ start, end });
+  const filtered = tasks.filter(t => t.due_date && (!project || t.project_id === project) && (!assignee || (assignee === "unassigned" ? !t.assignee_id : t.assignee_id === assignee)));
+  const today = dateKey(new Date());
+  const shift = (n: number) => setCursor(view === "month" ? addMonths(cursor, n) : addWeeks(cursor, n));
+  return <div className="space-y-6"><PageHeader title="Calendar" description={view === "month" ? format(cursor, "MMMM yyyy") : `${format(start, "MMM d")} – ${format(end, "MMM d, yyyy")}`} actions={<><Button variant="outline" size="iconSm" aria-label={`Previous ${view}`} title={`Previous ${view}`} onClick={() => shift(-1)}><ChevronLeft /></Button><Button variant="outline" size="sm" onClick={() => setCursor(new Date())}>Today</Button><Button variant="outline" size="iconSm" aria-label={`Next ${view}`} title={`Next ${view}`} onClick={() => shift(1)}><ChevronRight /></Button></>} />
+    <div className="flex flex-wrap gap-3"><div role="group" aria-label="Calendar view" className="flex gap-1">{(["month", "week"] as const).map(v => <Button key={v} size="sm" variant={view === v ? "ink" : "outline"} aria-pressed={view === v} onClick={() => setView(v)}>{v === "month" ? "Month" : "Week"}</Button>)}</div><Select aria-label="Filter by project" className="sm:w-52" value={project} onChange={e => setProject(e.target.value)}><option value="">All projects</option>{projects.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}</Select><Select aria-label="Filter by assignee" className="sm:w-52" value={assignee} onChange={e => setAssignee(e.target.value)}><option value="">All assignees</option><option value="unassigned">Unassigned</option>{members.filter(m => m.user_id).map(m => <option key={m.id} value={m.user_id ?? ""}>{m.profile?.full_name ?? m.invited_email ?? "Member"}</option>)}</Select></div>
+    {error ? <p role="alert" className="text-destructive">Could not load deadlines. Please refresh.</p> : isLoading ? <Skeleton className="h-96" /> : <><div className="grid grid-cols-1 overflow-hidden rounded-lg border-2 border-foreground bg-card md:grid-cols-7">{days.map(day => {
+      const key = dateKey(day); const items = filtered.filter(t => t.due_date === key);
+      return <section key={key} aria-label={format(day, "EEEE MMMM d")} className={cn("min-w-0 border-b border-foreground/15 p-2 md:min-h-32 md:border-r", view === "week" && "md:min-h-96", view === "month" && !isSameMonth(day, cursor) && "hidden bg-muted/50 md:block")}><h2 className={cn("mb-2 inline-flex min-h-8 items-center gap-1 rounded-md px-2 text-xs font-bold", today === key && "bg-primary text-primary-foreground")}><span className="md:hidden">{format(day, "EEE")}</span><span className="hidden md:inline">{format(day, "EEE")}</span> {format(day, "d")}</h2><ul className="space-y-2">{items.map(t => <li key={t.id}><Button variant="ghost" className={cn("h-auto min-h-10 w-full justify-start whitespace-normal rounded-md border border-foreground/20 px-2 py-2 text-left text-xs", t.status === "done" ? "bg-lime text-lime-foreground" : isOverdue(t, today) ? "border-destructive text-destructive" : "bg-background")} onClick={() => setSelected(t)}><span className="min-w-0 break-words">{t.title}{isOverdue(t, today) && <span className="block text-[10px]">Overdue</span>}</span></Button></li>)}</ul></section>;
+    })}</div>{!filtered.length && <EmptyState bare icon={CalendarDays} title="No scheduled tasks" sub="No task deadlines match these filters." />}</>}
+    {selected && <TaskDetails key={selected.id} task={selected} onClose={() => setSelected(null)} />}
+  </div>;
 }

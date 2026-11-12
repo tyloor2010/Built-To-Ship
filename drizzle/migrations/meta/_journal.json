@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1794457462331,
+      "tag": "0000_workspace_files_and_ai_conversations",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794457604605,
+      "tag": "0001_ai_request_rate_guard",
+      "breakpoints": true
+    }
+  ]
+}
