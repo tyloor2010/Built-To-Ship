@@ -39,7 +39,7 @@ const PLANS = [
   },
   {
     name: "PRO",
-    price: "$12",
+    price: "$5",
     per: "/ user / month",
     blurb: "For growing teams.",
     features: ["Unlimited projects", "Kanban + calendar", "AI Commander", "Files & comments"],
@@ -48,7 +48,7 @@ const PLANS = [
   },
   {
     name: "TEAM",
-    price: "$25",
+    price: "$15",
     per: "/ user / month",
     blurb: "For serious organizations.",
     features: ["Roles & permissions", "Advanced analytics", "Audit activity log", "Priority support"],
