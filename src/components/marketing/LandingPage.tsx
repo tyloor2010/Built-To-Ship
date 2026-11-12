@@ -61,7 +61,7 @@ const PLANS = [
 function Nav() {
   return (
     <header className="sticky top-0 z-40 border-b-3 border-foreground bg-background/90 backdrop-blur">
-      <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:px-6">
+      <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:px-6 lg:grid-cols-[minmax(0,1fr)_auto_auto] lg:gap-6">
         <Link to="/" className="flex min-w-0 items-center gap-3">
           <img src={logo} alt="SYNEXIS logo" width={44} height={44} className="size-11 shrink-0 object-contain" />
           <span className="display truncate text-sm leading-[0.85]">
